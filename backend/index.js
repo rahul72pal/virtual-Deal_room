@@ -22,7 +22,12 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://virtual-deal-room.vercel.app", // ✅ Allow frontend
+    credentials: true, // ✅ Allow cookies & headers
+  })
+);
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -44,8 +49,9 @@ app.use(errorHandler);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    // methods: ["GET", "POST"],
+    origin: "https://virtual-deal-room.vercel.app", // ✅ Allow frontend
+    methods: ["GET", "POST", "PUT"], // ✅ Allow necessary methods
+    credentials: true, // ✅ Allow headers/cookies
   },
 });
 
