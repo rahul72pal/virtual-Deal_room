@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("http://localhost:5000"); // Connect to backend server
+const socket = io("https://virtual-deal-room.onrender.com"); // Connect to backend server
 
 const ChatPage = () => {
     const { id: dealId } = useParams(); // Get deal ID from URL params
@@ -20,7 +20,7 @@ const ChatPage = () => {
         socket.emit("joinRoom", dealId);
 
         // Fetch chat history
-        axios.get(`http://localhost:5000/api/messages/${dealId}`)
+        axios.get(`https://virtual-deal-room.onrender.com/api/messages/${dealId}`)
             .then((res) => setMessages(res.data))
             .catch((err) => console.error("Error fetching messages:", err));
 
