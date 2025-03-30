@@ -49,7 +49,7 @@ const MakeBidPage = () => {
             const res = await apiRequest("POST", `bid/${id}/bid`, { offeredPrice });
     
             toast.success(res.message); // Assuming `apiRequest` returns `{ message: "..."}`
-            navigate("/deals"); // Redirect after bid placement
+            navigate("/dashboard"); // Redirect after bid placement
         } catch (error) {
             toast.error(error.message || "Error placing bid");
         } finally {

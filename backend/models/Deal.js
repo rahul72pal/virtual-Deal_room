@@ -17,6 +17,7 @@ const dealSchema = new mongoose.Schema(
         status: { type: String, enum: ["Pending", "In Progress", "Completed", "Cancelled"], default: "Pending" },
         seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         bids: [bidSchema], // Embedding bid schema to generate `_id` for each bid
+        buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     },
     { timestamps: true }
 );

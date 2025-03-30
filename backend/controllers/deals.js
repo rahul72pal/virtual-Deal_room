@@ -192,11 +192,38 @@ const deleteDeal = async (req, res) => {
   }
 };
 
+const getCompletedDealsByBuyer = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get user ID from request
+    const userRole = req.user.role; // Get user role (buyer or seller)
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find completed deals where the user is either a seller or has placed a bid as a buyer
+    const deals = await Deal.find({
+      status: "Completed",
+      $or: [{ seller: userId }, { "bids.buyer": userId }], // Match deals where the user is a seller or a buyer
+    })
+      .populate("seller", "name email") // Populate seller details
+      .populate("bids.buyer", "name email") // Populate buyer details inside bids
+      .sort({ updatedAt: -1 }); // Sort by latest updated
+
+    res.status(200).json(deals);
+  } catch (error) {
+    console.error("Error fetching completed deals:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 module.exports = {
   createDeal,
   getDeals,
   updateDealStatus,
   deleteDeal,
   acceptDeal,
-  getDealDetails
+  getDealDetails,
+  getCompletedDealsByBuyer
 };

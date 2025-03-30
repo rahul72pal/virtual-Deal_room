@@ -107,7 +107,6 @@ export default function AuthForm({ isRegister }) {
                                 <SelectContent>
                                     <SelectItem value="buyer">Buyer</SelectItem>
                                     <SelectItem value="seller">Seller</SelectItem>
-                                    <SelectItem value="admin">Admin</SelectItem>
                                 </SelectContent>
                             </Select>
                             {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}

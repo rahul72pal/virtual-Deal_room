@@ -1,6 +1,6 @@
 const express = require("express");
 const { protect, authorize } = require("../middleware/authMiddleware");
-const { createDeal, getDeals, updateDealStatus, deleteDeal, acceptDeal, getDealDetails } = require("../controllers/deals");
+const { createDeal, getDeals, updateDealStatus, deleteDeal, acceptDeal, getDealDetails, getCompletedDealsByBuyer } = require("../controllers/deals");
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ const router = express.Router();
 router.post("/", protect, authorize("seller"), createDeal); // Only sellers can create deals
 
 router.get("/", protect, authorize("buyer", "seller"), getDeals); // Both buyers & sellers can see deals
+
+router.get("/completedeals", protect, authorize("buyer", "seller"), getCompletedDealsByBuyer);
 
 router.get("/:id/dealDetails", protect, authorize("buyer", "seller"), getDealDetails);
 

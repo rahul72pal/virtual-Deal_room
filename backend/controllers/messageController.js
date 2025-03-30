@@ -110,43 +110,49 @@ const getDealMessages = async (req, res) => {
 };
 
 const getDealsWithMessages = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    // Find messages where the user is either the sender or receiver
-    const messages = await Message.find({
-      $or: [{ sender: userId }, { receiver: userId }],
-    })
-      .sort({ createdAt: -1 }) // Get latest messages first
-      .populate("deal", "title")
-      .populate("sender", "name")
-      .populate("receiver", "name");
-
-    // Extract unique deals and get the latest message per deal
-    const dealMap = new Map();
-    messages.forEach((msg) => {
-      const dealId = msg.deal?._id?.toString();
-      if (!dealId) return; // Skip if deal is not populated
-
-      if (!dealMap.has(dealId)) {
-        dealMap.set(dealId, {
-          dealId,
-          dealTitle: msg.deal.title,
-          latestMessage: { id: msg._id, text: msg.content },
-          buyerId: msg.sender._id.toString(), // Assuming sender is the buyer
-          buyerName: msg.sender.name,
-        });
-      }
-    });
-
-    console.log("Deals with messages:", Array.from(dealMap.values()));
-
-    res.status(200).json(Array.from(dealMap.values()));
-  } catch (error) {
-    console.error("Error fetching deals with messages:", error);
-    res.status(500).json({ message: error.message });
-  }
+    try {
+      const userId = req.user.id;
+  
+      // Find messages where the user is either the sender or receiver
+      const messages = await Message.find({
+        $or: [{ sender: userId }, { receiver: userId }],
+      })
+        .sort({ createdAt: -1 }) // Get latest messages first
+        .populate({
+          path: "deal",
+          select: "title price status", // Fetch status to filter
+        })
+        .populate("sender", "name")
+        .populate("receiver", "name");
+  
+      // Extract unique deals and get the latest message per deal
+      const dealMap = new Map();
+      messages.forEach((msg) => {
+        const deal = msg.deal;
+        if (!deal || deal.status === "Completed") return; // ✅ Skip completed deals
+  
+        const dealId = deal._id.toString();
+        if (!dealMap.has(dealId)) {
+          dealMap.set(dealId, {
+            dealId,
+            dealTitle: deal.title,
+            price: deal.price,
+            latestMessage: { id: msg._id, text: msg.content },
+            buyerId: msg.sender._id.toString(), // Assuming sender is the buyer
+            buyerName: msg.sender.name,
+          });
+        }
+      });
+  
+      console.log("Deals with messages:", Array.from(dealMap.values()));
+  
+      res.status(200).json(Array.from(dealMap.values()));
+    } catch (error) {
+      console.error("Error fetching deals with messages:", error);
+      res.status(500).json({ message: error.message });
+    }
 };
+  
 
 module.exports = {
   sendMessage,

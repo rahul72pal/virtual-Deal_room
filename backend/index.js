@@ -29,6 +29,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/deals", dealRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/bid", bidRoutes);
+app.use('/api/payment', require('./routes/paymentRoutes'));
 
 // Define a root route
 app.get("/", (req, res) => {
