@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "@/redux/store";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "https://virtual-deal-room.onrender.com/api",
 });
 
 // Attach token dynamically before each request

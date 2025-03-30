@@ -50,7 +50,7 @@ const ChatPage = () => {
     
         try {
             // Send message to backend for database storage
-            const { data } = await axios.post(`http://localhost:5000/api/messages/${dealId}`, { content: newMessage }, {
+            const { data } = await axios.post(`https://virtual-deal-room.onrender.com/api/messages/${dealId}`, { content: newMessage }, {
                 headers: { Authorization: `Bearer ${user.token}` }, // Ensure authorization
             });
     

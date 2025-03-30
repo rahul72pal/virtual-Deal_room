@@ -24,7 +24,7 @@ const MessagesPage = () => {
     // Connect to socket and fetch initial messages
     useEffect(() => {
         // Initialize socket connection
-        socketRef.current = io("http://localhost:5000" , {
+        socketRef.current = io("https://virtual-deal-room.onrender.com" , {
             auth: { token }
         });
 
